@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ArtistaRepositorie implements GenericRepositorie<Artista>, Loggable<Artista> {
     @Override
     public void add(Artista artista) {
-        String sql = "INSERT INTO Artista(Nome"
+        String sql = "INSERT INTO Artista(Nome, generoMusical) Values (?, ?)";
 
     }
 
