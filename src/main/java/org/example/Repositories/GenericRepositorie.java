@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public interface GenericRepositorie <T>{
 
     void add(T entitie);
-    ArrayList<T> exibir();
+    ArrayList<T> display();
     void edit(T entitie);
     void delete(int id);
 

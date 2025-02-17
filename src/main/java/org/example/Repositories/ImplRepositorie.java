@@ -13,7 +13,7 @@ public abstract class ImplRepositorie <T extends _BaseEntitie> implements Generi
     }
 
     @Override
-    public ArrayList<T> exibir() {
+    public ArrayList<T> display() {
         return list;
     }
 

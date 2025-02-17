@@ -43,7 +43,7 @@ public class MusicaRepositorie implements GenericRepositorie<Musica>, Loggable<M
     }
 
     @Override
-    public ArrayList<Musica> exibir() {
+    public ArrayList<Musica> display() {
         String sql = "SELECT * FROM MUSICA";
 
         ArrayList<Musica> musicas = new ArrayList<>();
