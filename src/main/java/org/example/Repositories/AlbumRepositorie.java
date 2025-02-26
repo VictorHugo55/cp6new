@@ -1,5 +1,6 @@
 package org.example.Repositories;
 
+import oracle.jdbc.proxy.annotation.Pre;
 import org.example.Entities.Album;
 import org.example.Entities.Artista;
 import org.example.Log.Loggable;
@@ -53,20 +54,54 @@ public class AlbumRepositorie implements GenericRepositorie<Album>, Loggable<Alb
                 album.setAnoLancamento(rs.getInt("ano_lancamento_album"));
 
                 Artista artista = artistaRepositorie.findById(rs.getInt("artista_id"));
+                album.setArtista(artista);
+                albums.add(album);
             }
-
+        }catch (SQLException e){
+            e.printStackTrace();
+            logInfo("Error displaying Album");
         }
         return albums;
     }
 
     @Override
-    public void edit(Album entitie) {
+    public void edit(Album album) {
+        String sql = "UPDATE ALBUM SET titulo_album = ?, ano_lancamento_album = ?, artista_id = ? WHERE id_album = ?";
 
+        try(Connection conn = DataBaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setString(1, album.getTitulo());
+            stmt.setInt(2, album.getAnoLancamento());
+            stmt.setInt(3, album.getArtista().getId());
+            stmt.setInt(4, album.getId());
+
+            int rowsUpdate = stmt.executeUpdate();
+            if(rowsUpdate > 0){
+                logInfo("Album updated sucessfully!");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            logInfo("Error updating album");
+        }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id_album) {
+        String sql = "DELETE FROM ALBUM WHERE id_album = ?";
 
+        try(Connection conn = DataBaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, id_album);
+            int rowsDeleted = stmt.executeUpdate();
+            if(rowsDeleted > 0){
+                logInfo("Album deleted");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            logInfo("Error when deleting album");
+        }
     }
 
     @Override
