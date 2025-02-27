@@ -105,7 +105,45 @@ public class AlbumRepositorie implements GenericRepositorie<Album>, Loggable<Alb
     }
 
     @Override
-    public Album findById(int id) {
-        return null;
+    public Album findById(int id_album) {
+        String sql = "SELECT id_album, titulo_album, ano_lancamento_album" +
+                ", id AS artista_id, nome AS artista_nome, FROM ALBUM JOIN ARTISTA ON artista_id = id WHERE id_album = ?";
+        Album album = new Album();
+        try(Connection conn = DataBaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, id_album);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                album = new Album();
+                album.setId(rs.getInt("id_album"));
+                album.setTitulo(rs.getString("titulo_album"));
+                album.setAnoLancamento(rs.getInt("ano_lancamento_album"));
+
+                Artista artista = artistaRepositorie.findById(rs.getInt("artista_id"));
+
+                album.setArtista(artista);
+                return album;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            logInfo("Error when finding by id");
+        }
+        return album;
+    }
+
+    public List<Album> findByYear(int ano){
+        List<Album> albums = new ArrayList<>();
+
+        String sql = "SELECT id_album, titulo_album FROM ALBUM WHERE ano_lancamento_album = ?";
+
+        try(Connection conn = DataBaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, ano);
+            ResultSet rs = stmt.executeQuery();
+        }
+        return albums;
     }
 }
